@@ -27,7 +27,6 @@ async def generate_pdf(url: str) -> bytes:
         if browser:
             await browser.close()
 
-
 @app.get("/")
 def main():
     return {"code": 1}
@@ -46,7 +45,5 @@ async def generate_pdf_route(url: str = Query(..., description="The URL of the w
     except Exception as e:
         print(f"Error generating PDF: {e}")
         raise HTTPException(status_code=500, detail="An error occurred while generating the PDF")
-
-
 
 # uvicorn main:app --host 0.0.0.0 --port 9001
