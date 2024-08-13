@@ -22,7 +22,8 @@ async def generate_pdf(url: str) -> bytes:
         })
         return pdf
     except Exception as e:
-        logging.error(f"Error generating PDF: {e}")
+        print("Error generating PDF")
+        logging.error(e)
     finally:
         if browser:
             await browser.close()
