@@ -41,6 +41,6 @@ async def generate_pdf_route(url: str = Query(..., description="The URL of the w
         raise HTTPException(status_code=500, detail="An error occurred while generating the PDF")
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=9000)
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app, host="127.0.0.1", port=9000)
