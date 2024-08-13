@@ -30,12 +30,12 @@ async def generate_pdf(url: str) -> bytes:
         page = await browser.newPage()
         await page.goto(url, {'waitUntil': 'networkidle0', 'timeout': 60000})  # 페이지가 완전히 로드될 때까지 대기
         print("url loaded")
-        await asyncio.sleep(3)  # 3초 대기
-        pdf = await page.pdf({
-            'format': 'A4',
-            'printBackground': False,
-        })
-        return pdf
+        # await asyncio.sleep(3)  # 3초 대기
+        # pdf = await page.pdf({
+        #     'format': 'A4',
+        #     'printBackground': False,
+        # })
+        # return pdf
     except Exception as e:
         print("Error generating PDF")
         logging.error(e)
