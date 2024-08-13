@@ -12,10 +12,17 @@ async def generate_pdf(url: str) -> bytes:
     print("generate_pdf", url)
     browser = None
     try:
-        browser = await launch(headless=True, args=['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
+        browser = await launch(headless=True, args=[
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-gpu',
+            '--disable-software-rasterizer'
+        ])
         page = await browser.newPage()
         await page.goto(url, {'waitUntil': 'networkidle0', 'timeout': 60000})  # 페이지가 완전히 로드될 때까지 대기
         print("url loaded")
+        await asyncio.sleep(3)  # 3초 대기
         pdf = await page.pdf({
             'format': 'A4',
             'printBackground': False,
@@ -27,6 +34,7 @@ async def generate_pdf(url: str) -> bytes:
     finally:
         if browser:
             await browser.close()
+
 
 @app.get("/")
 def main():
