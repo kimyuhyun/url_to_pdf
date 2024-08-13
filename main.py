@@ -12,7 +12,7 @@ async def generate_pdf(url: str) -> bytes:
     print("generate_pdf", url)
     browser = None
     try:
-        browser = await launch(headless=True, args=['--no-sandbox', '--disable-setuid-sandbox'])
+        browser = await launch(headless=True, args=['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
         page = await browser.newPage()
         await page.goto(url, {'waitUntil': 'networkidle0'})  # 페이지가 완전히 로드될 때까지 대기
         print("url loaded")
