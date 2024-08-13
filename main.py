@@ -48,4 +48,5 @@ async def generate_pdf_route(url: str = Query(..., description="The URL of the w
         raise HTTPException(status_code=500, detail="An error occurred while generating the PDF")
 
 
+
 # uvicorn main:app --host 0.0.0.0 --port 9001
