@@ -3,24 +3,27 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pyppeteer import launch
 import io
+import logging
 
 app = FastAPI()
 
 
 async def generate_pdf(url: str) -> bytes:
     print("generate_pdf", url)
-    browser = await launch(headless=True, args=['--no-sandbox', '--disable-setuid-sandbox'])
-    page = await browser.newPage()
-    await page.goto(url, {'waitUntil': 'networkidle0'})  # 페이지가 완전히 로드될 때까지 대기
-    print("url loaded")
-    pdf = await page.pdf({
-        'format': 'A4',
-        'printBackground': False,
-    })
-
-    await browser.close()
-    return pdf
-
+    try:
+        browser = await launch(headless=True, args=['--no-sandbox', '--disable-setuid-sandbox'])
+        page = await browser.newPage()
+        await page.goto(url, {'waitUntil': 'networkidle0'})  # 페이지가 완전히 로드될 때까지 대기
+        print("url loaded")
+        pdf = await page.pdf({
+            'format': 'A4',
+            'printBackground': False,
+        })
+        return pdf
+    except Exception as e:
+        logging.error(f"Error generating PDF: {e}")
+    finally:
+        await browser.close()
 
 @app.get("/")
 def main():
