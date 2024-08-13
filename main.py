@@ -12,9 +12,17 @@ async def generate_pdf(url: str) -> bytes:
     print("generate_pdf", url)
     browser = None
     try:
-        browser = await launch(headless=True, args=[
+        # browser = await launch(headless=True, args=[
+        #     '--no-sandbox',
+        #     '--disable-setuid-sandbox',
+        #     '--disable-dev-shm-usage',
+        #     '--disable-gpu',
+        #     '--disable-software-rasterizer'
+        # ])
+        browser = await launch(executablePath='/usr/local/bin/headless-chromium', args=[
+            '--headless',
             '--no-sandbox',
-            '--disable-setuid-sandbox',
+            '--single-process',
             '--disable-dev-shm-usage',
             '--disable-gpu',
             '--disable-software-rasterizer'
