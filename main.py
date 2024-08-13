@@ -10,6 +10,7 @@ app = FastAPI()
 
 async def generate_pdf(url: str) -> bytes:
     print("generate_pdf", url)
+    browser = None
     try:
         browser = await launch(headless=True, args=['--no-sandbox', '--disable-setuid-sandbox'])
         page = await browser.newPage()
@@ -23,7 +24,9 @@ async def generate_pdf(url: str) -> bytes:
     except Exception as e:
         logging.error(f"Error generating PDF: {e}")
     finally:
-        await browser.close()
+        if browser:
+            await browser.close()
+
 
 @app.get("/")
 def main():
