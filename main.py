@@ -14,7 +14,7 @@ async def generate_pdf(url: str) -> bytes:
     try:
         browser = await launch(headless=True, args=['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'])
         page = await browser.newPage()
-        await page.goto(url, {'waitUntil': 'networkidle0'})  # 페이지가 완전히 로드될 때까지 대기
+        await page.goto(url, {'waitUntil': 'networkidle0', 'timeout': 60000})  # 페이지가 완전히 로드될 때까지 대기
         print("url loaded")
         pdf = await page.pdf({
             'format': 'A4',
