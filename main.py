@@ -8,10 +8,11 @@ app = FastAPI()
 
 
 async def generate_pdf(url: str) -> bytes:
-    browser = await launch(headless=True)
+    print("generate_pdf", url)
+    browser = await launch(headless=True, args=['--no-sandbox', '--disable-setuid-sandbox'])
     page = await browser.newPage()
     await page.goto(url, {'waitUntil': 'networkidle0'})  # 페이지가 완전히 로드될 때까지 대기
-
+    print("url loaded")
     pdf = await page.pdf({
         'format': 'A4',
         'printBackground': False,
@@ -41,6 +42,8 @@ async def generate_pdf_route(url: str = Query(..., description="The URL of the w
         raise HTTPException(status_code=500, detail="An error occurred while generating the PDF")
 
 
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="127.0.0.1", port=9001)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=9001)
+
+# uvicorn main:app --host 0.0.0.0 --port 9001
