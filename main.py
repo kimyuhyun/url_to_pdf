@@ -43,7 +43,8 @@ async def generate_pdf_route(url: str = Query(..., description="The URL of the w
             "Content-Disposition": f"attachment; filename=output.pdf"
         })
     except Exception as e:
-        print(f"Error generating PDF: {e}")
+        print("Error generating PDF")
+        print(e)
         raise HTTPException(status_code=500, detail="An error occurred while generating the PDF")
 
-# uvicorn main:app --host 0.0.0.0 --port 9001
+# sudo uvicorn main:app --host 0.0.0.0 --port 9001
