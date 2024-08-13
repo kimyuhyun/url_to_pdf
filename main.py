@@ -1,0 +1,46 @@
+import asyncio
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import StreamingResponse
+from pyppeteer import launch
+import io
+
+app = FastAPI()
+
+
+async def generate_pdf(url: str) -> bytes:
+    browser = await launch(headless=True)
+    page = await browser.newPage()
+    await page.goto(url, {'waitUntil': 'networkidle0'})  # 페이지가 완전히 로드될 때까지 대기
+
+    pdf = await page.pdf({
+        'format': 'A4',
+        'printBackground': False,
+    })
+
+    await browser.close()
+    return pdf
+
+
+@app.get("/")
+def main():
+    return {"code": 1}
+
+
+@app.get("/generate-pdf")
+async def generate_pdf_route(url: str = Query(..., description="The URL of the website to convert to PDF")):
+    if not url:
+        raise HTTPException(status_code=400, detail="URL is required")
+
+    try:
+        pdf = await generate_pdf(url)
+        return StreamingResponse(io.BytesIO(pdf), media_type="application/pdf", headers={
+            "Content-Disposition": f"attachment; filename=output.pdf"
+        })
+    except Exception as e:
+        print(f"Error generating PDF: {e}")
+        raise HTTPException(status_code=500, detail="An error occurred while generating the PDF")
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=9000)
